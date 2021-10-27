@@ -7,4 +7,4 @@ spec:
   - name: dns
     image: docker.io/tutum/dnsutils
     command: ["sleep", "9999999999"]
-  restartPolicy: OnFailure
+  restartPolicy: Always

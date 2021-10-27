@@ -7,4 +7,6 @@ spec:
   - name: curl
     image: docker.io/curlimages/curl
     command: ["sleep", "9999999999"]
-  restartPolicy: OnFailure
+  - name: ambassador 
+    image: luksa/kubectl-proxy:1.6.2
+  restartPolicy: Always
