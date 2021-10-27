@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dns
+spec:
+  containers:
+  - name: dns
+    image: docker.io/tutum/dnsutils
+    command: ["sleep", "9999999999"]
+  restartPolicy: Always

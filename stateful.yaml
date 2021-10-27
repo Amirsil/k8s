@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kubia
+spec:
+  updateStrategy: 
+    type: RollingUpdate
+    rollingUpdate:
+      partition: 0
+  serviceName: kubia
+  replicas: 3
+  selector:
+    matchLabels:
+      app: sts
+  template:
+    metadata:
+      labels:
+        app: sts
+    spec:
+      containers:
+      - name: kubia
+        image: luksa/kubia-pet-peers
+        ports:
+        - name: http
+          containerPort: 8080
+        volumeMounts:
+        - name: data
+          mountPath: /var/data
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      resources:
+        requests:
+          storage: 1Mi
+      accessModes:
+      - ReadWriteOnce 
+
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubia
+spec:
+  clusterIP: None 
+  selector:
+    app: sts
+  ports:
+  - name: http
+    port: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubia-public
+spec:
+  selector:
+    app: sts
+  ports:
+  - port: 80
+    targetPort: 8080
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+ name: kubia
+spec:
+ rules:
+ - host: kubia
+   http:
+     paths:
+     - path: /
+       pathType: Prefix
+       backend:
+         service:
+           name: kubia-public
+           port:
+             number: 80
