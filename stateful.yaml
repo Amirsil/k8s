@@ -8,7 +8,7 @@ spec:
     rollingUpdate:
       partition: 0
   serviceName: kubia
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: sts
